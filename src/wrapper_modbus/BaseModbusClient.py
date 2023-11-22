@@ -129,7 +129,7 @@ class BaseModbusClient():
         return tmp 
 
 
-    def _readRegisters(self,Address_start,num_registers):
+    def readRegisters(self,Address_start,num_registers):
         print("address:",Address_start,"num_registers",num_registers)
         result= self.client.read_holding_registers(Address_start,num_registers)
         tmp = result.registers
