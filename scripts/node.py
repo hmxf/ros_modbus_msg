@@ -38,12 +38,12 @@ def callback_sub_param(msg):
     # multiAxis_Origin
     elif operation == 3:
         values = [x_speed,y_speed,z_speed] # [x,y,z]
-        client.multiAxis_Origin(values=values)
+        client.multiAxis_OriginAll(values=values)
 
     # multiAxis_AbsRunSpeed
     elif operation == 4:
         values = [A_x,x_speed,A_y,y_speed,A_z,z_speed] # [x,y,z]
-        client.multiAxis_AbsRunSpeed(values=values)
+        client.multiAxis_AbsMoveSpeed(values=values)
         
     
 def callback_sub_Noparam(msg):
@@ -60,7 +60,7 @@ def callback_sub_Noparam(msg):
 
     # multiAxis_Origin_all
     elif oper == 3:
-        client.multiAxis_Origin_all()
+        client.multiAxis_OriginAll()
 
 
 if __name__ == '__main__':

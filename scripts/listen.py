@@ -24,15 +24,12 @@ if __name__ == "__main__":
 
     ch0 = ['x_1',10120,2,10150]
     ch1 = ['x_2',10220,2,10250]
-    ch2 = ['y',10320,2,10350]
-    ch3 = ['z',10420,2,10450]
+    ch2 = [ 'y' ,10320,2,10350]
+    ch3 = [ 'z' ,10420,2,10450]
 
     ch0_speed,ch0_ms = speed_ms(ch0)
-
     ch1_speed,ch1_ms = speed_ms(ch1)
-    
     ch2_speed,ch2_ms = speed_ms(ch2)
-    
     ch3_speed,ch3_ms = speed_ms(ch3)
 
     oput(ch0[0],ch0_speed,ch0_ms)
