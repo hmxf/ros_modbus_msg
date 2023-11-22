@@ -121,15 +121,20 @@ class BaseModbusClient():
 
         with self.__mutex:            
             try:
-                print("address:",Address_start,"num_registers",num_registers)
                 result= self.client.read_holding_registers(Address_start,num_registers)
                 tmp = result.registers
-                print("readRegisters' tmp:",tmp)
             except Exception as e:
                 rospy.logwarn("Could not read on address %d. Exception: %s",Address_start,str(e))
                 raise e
         return tmp 
-    
+
+
+    def _readRegisters(self,Address_start,num_registers):
+        print("address:",Address_start,"num_registers",num_registers)
+        result= self.client.read_holding_registers(Address_start,num_registers)
+        tmp = result.registers
+        print("readRegisters' tmp:",tmp)
+ 
 
     def multiAxis_StateRead(self):
         rospy.loginfo("Reading Status \n")
