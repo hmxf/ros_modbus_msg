@@ -152,14 +152,14 @@ class BaseModbusClient():
        
         data = self.StateRead_OperationTable()
         # 输出表头
-        print("{:<15} {:<20} {:<15}".format("轴名", "状态位", "当前位置速度"))
+        print("{:<15} {:<20} {:<15} {:<15}".format("轴名", "状态位", "当前位置","当前速度"))
         # 输出数据行
         for item in data:
             status = bin(result[item["status_index"]])
             position = result[item["position_index"]]
             speed = result[item["speed_index"]]
             
-            print(f"{item['name']:<15} {status:<20} {f'位置：{position}, 速度：{speed}':<20}")
+            print(f"{item['name']:<15} {status:<20} {position:<15} {speed:<15}")
 
         return result
 
