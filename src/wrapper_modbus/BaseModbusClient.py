@@ -127,13 +127,6 @@ class BaseModbusClient():
                 rospy.logwarn("Could not read on address %d. Exception: %s",Address_start,str(e))
                 raise e
         return tmp 
-
-
-    def _readRegisters(self,Address_start,num_registers):
-        print("address:",Address_start,"num_registers",num_registers)
-        result= self.client.read_holding_registers(Address_start,num_registers)
-        tmp = result.registers
-        print("readRegisters' tmp:",tmp)
  
 
     def readRegisters(self,Address_start,num_registers):
@@ -141,17 +134,33 @@ class BaseModbusClient():
         tmp = self._readRegisters(Address_start,num_registers)        
         print("readRegisters' tmp:",tmp)
 
+    def StateRead_OperationTable(self):
+        data = [
+            {"name": "X_1(CH0)", "status_index": 1, "position_index": 3, "speed_index": 5},
+            {"name": "X_2(CH1)", "status_index": 7, "position_index": 9, "speed_index": 11},
+            {"name": " Y (CH2)", "status_index": 13, "position_index": 15, "speed_index": 17},
+            {"name": " Z (CH3)", "status_index": 19, "position_index": 21, "speed_index": 23},]
+        return data
+
 
     def multiAxis_StateRead(self):
         rospy.loginfo("Reading Status \n")
         num_registers = multiAxis_OperationTable.multiAxisStateRead.value.registers_per_axis*4
         address_read_start = multiAxis_OperationTable.multiAxisStateRead.value.ADDRESS_READ_START 
         result = self._readRegisters(address_read_start,num_registers)  # result:list
-        print(f"X_1(CH0) 状态位:{bin(result[1])}    当前位置：{result[3]}       当前速度：{result[5]} ")
-        print(f"X_2(CH1) 状态位:{bin(result[7])}    当前位置：{result[9]}       当前速度：{result[11]} ")
-        print(f" y(CH2)  状态位:{bin(result[13])}   当前位置：{result[15]}      当前速度：{result[17]} ")
-        print(f" z(CH3)  状态位:{bin(result[19])}   当前位置：{result[21]}      当前速度：{result[23]} ")
-    
+       
+        data = self.StateRead_OperationTable()
+        # 输出表头
+        print("{:<15} {:<20} {:<15}".format("轴名", "状态位", "当前位置速度"))
+        # 输出数据行
+        for item in data:
+            status = bin(result[item["status_index"]])
+            position = result[item["position_index"]]
+            speed = result[item["speed_index"]]
+            
+            print(f"{item['name']:<15} {status:<20} {f'位置：{position}, 速度：{speed}':<20}")
+
+        return result
 
     def multiAxis_EMERGENCYSTOP(self):
         rospy.loginfo("EMERGENCY STOP\n")
@@ -193,8 +202,7 @@ class BaseModbusClient():
             if self._STOP == 1:
                 break
             rospy.sleep(1)
-            result = self._readRegisters(address_read_start,num_registers)
-            # self.multiAxisStateRead()
+            result = self.readRegisters(address_read_start,num_registers)
         rospy.set_param('complete',1)    
 
 

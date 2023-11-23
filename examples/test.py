@@ -31,26 +31,36 @@ def start_client():
 
 def test01_Abs_move():
     pub =rospy.Publisher("sub_param",slider,queue_size=50) 
-    complete = 1
-
+    
+    rospy.set_param('complete',1)
     slider_msg = slider()
     slider_msg.operation = 1
-    while not rospy.is_shutdown():
+    rospy.set_param('stop',1)
+    stop = rospy.get_param('stop')
+
+    rospy.sleep(15)
+    
+    while not rospy.is_shutdown() and stop:
+        stop = rospy.get_param('stop')
+        complete = rospy.get_param('complete')
+
+        rospy.sleep(10)
         if  complete:
             slider_msg.A_x = random.randint(1,200)*100
+            slider_msg.x_speed = 0
             slider_msg.A_y = random.randint(1,200)*100
+            slider_msg.y_speed = 0
             slider_msg.A_z = random.randint(1,200)*100
+            slider_msg.z_speed = 0
+            
             pub.publish(slider_msg)
-            complete = 0
+            rospy.set_param('complete',0)
             rospy.loginfo("A_x:%d A_y:%d A_z:%d",slider_msg.A_x,slider_msg.A_y,slider_msg.A_z)
         else:
             continue
 
 if __name__ == "__main__":
     rospy.init_node("Test")
-
-
-    # client = start_client()
-    # set_spms(client)
+    start_client()
     test01_Abs_move()
     
