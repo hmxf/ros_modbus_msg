@@ -134,6 +134,7 @@ class BaseModbusClient():
         tmp = self._readRegisters(Address_start,num_registers)        
         print("readRegisters' tmp:",tmp)
 
+
     def StateRead_OperationTable(self):
         data = [
             {"name": "X_1(CH0)", "status_index": 1, "position_index": 3, "speed_index": 5},
