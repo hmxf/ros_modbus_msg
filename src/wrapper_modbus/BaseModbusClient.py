@@ -98,7 +98,7 @@ class BaseModbusClient():
                     self.client.write_registers(Address_start, Values)
                     print("writing address:",Address_start,",values:",Values)
             except Exception as e:
-                rospy.logwarn("Could not write values %s to address %d.\n ",str(values),address)
+                rospy.logwarn("Could not write values %s to address %d.\n ",str(Values),Address_start)
                 rospy.logwarn("Exception %s\n",str(e))
                 raise e
     
