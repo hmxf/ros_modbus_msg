@@ -38,7 +38,7 @@ def callback_sub_param(msg):
     # multiAxis_Origin
     elif operation == 3:
         values = [x_speed,y_speed,z_speed] # [x,y,z]
-        client.multiAxis_OriginAll(values=values)
+        client.multiAxis_AdvanceOrigin(values=values)
 
     # multiAxis_AbsRunSpeed
     elif operation == 4:
