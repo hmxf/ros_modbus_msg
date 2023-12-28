@@ -4,14 +4,14 @@ from wrapper_modbus.BaseModbusClient import BaseModbusClient
 def SpeedandMs(ch_x:list):
     tmp_speed = client._readRegisters(ch_x[1],ch_x[2])
     tmp_ms = client._readRegisters(ch_x[3],ch_x[2])
-    print(f"{ch_x[0]}: speed: {tmp_speed}  ms:{tmp_ms}")
+    rospy.loginfo(f"{ch_x[0]}: speed: {tmp_speed}  ms:{tmp_ms}")
 
 def Monitor_X_Axis_Position(result):
     """
     Monitor whether the position of the two x-axes is consistent, 
     (And the difference between the two axes is 5 units to meet the requirements
     """
-    print(result)
+    rospy.loginfo(result)
     if abs(result[3] - result[9]) not in (0, 5):
         rospy.logwarn(f"Warning: The x-axis positions are not synchronized! Value is {abs(result[3] - result[9])}")
         client.multiAxis_EMERGENCYSTOP()
@@ -23,7 +23,7 @@ if __name__ == "__main__":
     port = 502
 
     client = BaseModbusClient(host)
-    print("启动 ModBus 客户端")
+    rospy.loginfo("启动 ModBus 客户端")
 
     ch0 = ['X_1', 10120,2,10150]
     ch1 = ['X_2', 10220,2,10250]
