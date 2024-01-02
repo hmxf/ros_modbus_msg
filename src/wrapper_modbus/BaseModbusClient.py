@@ -56,9 +56,14 @@ class BaseModbusClient():
                 rospy.logwarn("Exception %s\n",str(e))
                 raise e
     
-    
-    def _is_None(x):
-        if x is None:
+    # bebug 为什么要两个值?
+    def _is_None(x,y): 
+        """
+        x=<wrapper_modbus.d12_modbus_client.D12ModbusClient object at 0x7f1deb7bf3d0> ,y=10120
+        x=<wrapper_modbus.d12_modbus_client.D12ModbusClient object at 0x7f1deb7bf3d0> ,y=2
+        """
+        # print(f"x={x } ,y={y}")
+        if y is None:
             print("%s is None!\n",str(x))
             x = 0
     
