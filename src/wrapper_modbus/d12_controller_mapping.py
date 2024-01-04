@@ -66,4 +66,23 @@ def StateRead_OperationTable(num_elements):
 
 num = 4         # 轴数
 formula_result(num)
-# StateRead_OperationTable(num)
+
+
+#ROS_Modbus: 操作映射表
+oper_map = {
+    1:"multiAxisStateRead",             # 读保持寄存器状态
+    2:"multiAxisStop",                  # 停止
+    3:"multiAxisRelativeMove",          # 相对移动 
+    4:"multiAxisAbsoluteMove",          # 绝对移动
+    5:"multiAxisRelativeSpeedMove",     # 相对移动 + 指定速度
+    6:"multiAxisAbsoluteSpeedMove",     # 绝对移动 + 指定速度
+    7:"multiAxisHoming",                # 回零点 
+}
+
+
+# d12_modbus_client: 写入数据后需要起始地址和寄存器数量
+check_complete_map = {
+    0: [10102, 2],
+    1: [10302, 2],
+    2: [10402, 2]
+}
