@@ -1,5 +1,4 @@
 import rospy
-from ros_modbus_msg.msg import slider
 from ros_modbus_msg.msg import operation
 import sys
 from wrapper_modbus.d12_modbus_client import D12ModbusClient
