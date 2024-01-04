@@ -50,20 +50,15 @@ class BaseModbusClient():
             try:
                 if not rospy.is_shutdown() :
                     self.client.write_registers(Address_start, Values)
-                    print("writing address:",Address_start,",values:",Values)
+                    rospy.loginfo(f"BaseModbusClient-_writeRegisters: writing address:{Address_start},values:{Values}")
             except Exception as e:
                 rospy.logwarn("Could not write values %s to address %d.\n ",str(Values),Address_start)
                 rospy.logwarn("Exception %s\n",str(e))
                 raise e
     
-    # bebug 为什么要两个值?
-    def _is_None(x,y): 
-        """
-        x=<wrapper_modbus.d12_modbus_client.D12ModbusClient object at 0x7f1deb7bf3d0> ,y=10120
-        x=<wrapper_modbus.d12_modbus_client.D12ModbusClient object at 0x7f1deb7bf3d0> ,y=2
-        """
-        # print(f"x={x } ,y={y}")
-        if y is None:
+    
+    def _is_None(self,x): 
+        if x is None:
             print("%s is None!\n",str(x))
             x = 0
     
@@ -89,6 +84,7 @@ class BaseModbusClient():
  
 
     def readRegisters(self,Address_start,num_registers):
-        print("address:",Address_start,"num_registers",num_registers)
+        rospy.loginfo(f"BaseModbusClient-readRegisters: address:{Address_start}, num_registers:{num_registers}")
         tmp = self._readRegisters(Address_start,num_registers)        
-        print("readRegisters' tmp:",tmp)
+        rospy.loginfo(f"BaseModbusClient-readRegisters: tmp:{tmp}")
+        return tmp
