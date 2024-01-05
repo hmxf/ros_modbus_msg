@@ -66,8 +66,8 @@ if __name__ == '__main__':
     host                         = '192.168.1.222'
     ch0                          = ['x_1',10120,2,10150]
     ch1                          = ['x_2',10220,2,10250]
-    multiAxis_EMERGENCYSTOP_data = [12999,15]
-    multiAxis_OriginAll_data     = [12997,15]
+    multiAxis_EMERGENCYSTOP_data = [12999,255]
+    multiAxis_OriginAll_data     = [12997,255]
 
     client = D12ModbusClient(host)
     rospy.loginfo("启动 ModBus 客户端")

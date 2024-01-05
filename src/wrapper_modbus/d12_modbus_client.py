@@ -6,7 +6,7 @@ from threading import Lock
 
 def _Num_Axis(result):
     """
-    计算读的轴数
+    计算读的通道数
     """
     return int(len(result) / date_map["multiAxisStateRead"][0])
 
@@ -66,24 +66,7 @@ class D12ModbusClient(BaseModbusClient):
         values = self._norm_xyz(values)
         address_write_start = multiAxis_OperationTable.multiAxisRelativeMove.value.ADDRESS_WRITE_START 
         self._writeRegisters(address_write_start,values)
-
-
-    def check_readReg(self,i):
-        result  = []
-        for item in check_complete_map[i]:
-            tmp = self.readRegisters(item[0], item[1])
-            result = result + tmp
-        return result
-    
-    def check_complete(self,i,value):
-        result = self.check_readReg(i)
-
-        while result != value:
-            if self._STOP == 1:
-                break
-            rospy.sleep(1)
-            result = self.check_readReg(i)
-        rospy.set_param('complete',1) """
+"""
     
     def check_complete(self,i,value):
         result = self.readRegisters(check_complete_map[i][0], check_complete_map[i][1])
@@ -124,7 +107,8 @@ class D12ModbusClient(BaseModbusClient):
             values (list): x, y and z in a list, e.g. [0,1000,0]
             [0,0,]
         """
-        rospy.loginfo("Origin all Axis with Specific Speed\n")
+        rospy.loginfo("Origin Axis with Specific Speed\n")
+        print(f"multiAxis_Origin: address={address}")
         self._writeRegisters(address,value)
         self.check_complete(i,value)
 

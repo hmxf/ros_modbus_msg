@@ -13,6 +13,7 @@ date_map = {
     "multiAxisHoming"            : [2,  None, 12680, 2, 1],     # 回零
 }
 
+
 # 计算公式
 def address_calculate_formula(key, num_ch):
     """
@@ -28,26 +29,27 @@ def address_calculate_formula(key, num_ch):
 
 
 # 计算函数
-def formula_result(num):
+def formula_result(num_ch):
     """
     通过date_map和address_caluculate_formula 公式计算每个通道的每个功能的起始地址；
     """
     axis_map = {}
-    for num_ch in range(num):
-        axis_map[num_ch] = {}
+    for ch in range(num_ch):
+        axis_map[ch] = {}
         for key in date_map:
             if key in date_map:
-                k = address_calculate_formula(key, num_ch)
-                axis_map[num_ch][key] = k
-    for num_ch, values in axis_map.items():
-        controller_axis_mapping[num_ch] = [values[key] for key in values]
+                k = address_calculate_formula(key, ch)
+                axis_map[ch][key] = k
+    for ch, values in axis_map.items():
+        controller_axis_mapping[ch] = [values[key] for key in values]
 
 
+# 读寄存器状态：生成读状态结果索引表
 def StateRead_OperationTable(num_elements):
     StateRead_data = []
     for i in range(num_elements):
         # 生成每个操作的名称和索引
-        operation_name = f"CH{i})"
+        operation_name = f"CH{i}"
         status_index = i * 6 + 1
         position_index = i * 6 + 3
         speed_index = i * 6 + 5
@@ -63,9 +65,13 @@ def StateRead_OperationTable(num_elements):
 
     return StateRead_data
 
-
-num = 4         # 轴数
-formula_result(num)
+host                         = '192.168.1.222'
+ch0                          = ['x_1',10120,2,10150]
+ch1                          = ['x_2',10220,2,10250]
+multiAxis_EMERGENCYSTOP_data = [12999,255]
+multiAxis_OriginAll_data     = [12997,255]
+num_ch = 4         # 通道数
+formula_result(num_ch)
 
 
 #ROS_Modbus: 操作映射表
@@ -85,4 +91,12 @@ check_complete_map = {
     0: [10102, 2],
     1: [10302, 2],
     2: [10402, 2]
+}
+
+# 各通道的速度 + 微步细分的地址：
+ch_mapping = {
+    "ch0" : ['X_1', 10120,2,10150],
+    "ch1" : ['X_2', 10220,2,10250],
+    "ch2" : [' Y ', 10320,2,10350],
+    "ch3" : [' Z ', 10420,2,10450]
 }

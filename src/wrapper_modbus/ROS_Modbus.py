@@ -3,9 +3,6 @@ from wrapper_modbus.d12_modbus_client import D12ModbusClient
 import rospy
 
 
-
-
-
 class Split_command():
     def _norm_xyz_move(self,value:list):
         x,y,z = value
@@ -17,24 +14,20 @@ class Split_command():
         return [[0,x_speed,0,x,0,x_speed,0,x],[0,y_speed,0,y],[0,z_speed,0,z]]
 
 
-    def _is_X(self,i,oper,value):
+    def _is_X(self, i, oper, value):
         if i == 0:
-            address       = controller_axis_mapping[i][oper-1]
-            num_registers = date_map[oper_map[oper]][0]*2
-            if len(value) < 6:
-                values    = self._norm_xyz_move(value)[i]
-            else:
-                values    = self._norm_xyz_speed(value)[i]
+            address = controller_axis_mapping[i][oper - 1]
         else:
-            address       = controller_axis_mapping[i+1][oper-1]
-            num_registers = date_map[oper_map[oper]][0]
-            if len(value) < 6:
-                values    = self._norm_xyz_move(value)[i]
-            else:
-                values    = self._norm_xyz_speed(value)[i]
-        return address,num_registers,values
- 
+            address = controller_axis_mapping[i + 1][oper - 1]
 
+        if len(value) < 6:
+            values = self._norm_xyz_move(value)[i]
+        else:
+            values = self._norm_xyz_speed(value)[i]
+
+        num_registers = date_map[oper_map[oper]][0] * (2 if i == 0 else 1)
+
+        return address, num_registers, values
 
 
 class OperCommand():
@@ -42,6 +35,7 @@ class OperCommand():
         self.spcom    = Split_command()
         self.client   = client
         self.Axis_num = 3
+
 
     def ROS_multiAxis_StateRead(self,oper,value):
         """
@@ -95,5 +89,37 @@ class OperCommand():
             self.complete = rospy.get_param("complete")
 
             while self.complete == 0:
+                print(f"ROS_multiAxis_AdvanceOrigin:  address={address}, values={values}")
                 self.client.multiAxis_Origin(address, values,i)
                 self.complete = rospy.get_param("complete")
+
+
+
+# class OperCommand():
+#     def __init__(self, client):
+#         self.spcom = Split_command()
+#         self.client = client
+#         self.Axis_num = 3
+
+#     def _perform_operation(self, i, oper, value, operation_func):
+#         address, num_registers, values = self.spcom._is_X(i, oper, value)
+
+#         rospy.set_param('complete', 0)
+#         self.complete = rospy.get_param("complete")
+
+#         while self.complete == 0:
+#             operation_func(address, values, i)
+#             self.complete = rospy.get_param("complete")
+
+
+#     def ROS_multiAxis_AbsoluteMove(self, oper, value):
+#         for i in range(self.Axis_num):
+#             self._perform_operation(i, oper, value, self.client.multiAxis_AbsoluteMove)
+
+#     def ROS_multiAxis_AbsMoveSpeed(self, oper, value):
+#         for i in range(self.Axis_num):
+#             self._perform_operation(i, oper, value, self.client.multiAxis_AbsMoveSpeed)
+
+#     def ROS_multiAxis_AdvanceOrigin(self, oper, value):
+#         for i in range(self.Axis_num):
+#             self._perform_operation(i, oper, value, self.client.multiAxis_Origin)
