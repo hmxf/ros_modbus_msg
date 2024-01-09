@@ -28,7 +28,6 @@ class BaseModbusClient():
         self.__last_output_time = rospy.get_time()
 
         self.__mutex = Lock()  # 定义互斥锁
-        self._STOP = 0
         rospy.on_shutdown(self._closeConnection)  
     
     

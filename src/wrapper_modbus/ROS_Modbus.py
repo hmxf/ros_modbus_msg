@@ -1,4 +1,4 @@
-from wrapper_modbus.d12_controller_mapping import *
+from wrapper_modbus.d12_controller_mapping import controller_axis_mapping,date_map,oper_map
 from wrapper_modbus.d12_modbus_client import D12ModbusClient
 import rospy
 
@@ -57,69 +57,27 @@ class OperCommand():
                 self.client.multiAxis_Stop(address, values)
 
 
-    def ROS_multiAxis_AbsoluteMove(self,oper,value):
-        for i in range(self.Axis_num):
-            address, num_registers, values = self.spcom._is_X(i,oper,value)
+    def _perform_operation(self, i, oper, value, operation_func):
+        address, num_registers, values = self.spcom._is_X(i, oper, value)
 
-            rospy.set_param('complete',0)
+        rospy.set_param('complete', 0)
+        self.complete = rospy.get_param("complete")
+
+        while self.complete == 0:
+            operation_func(address, values, i)
             self.complete = rospy.get_param("complete")
 
-            while self.complete == 0:
-                self.client.multiAxis_AbsoluteMove(address,values,i)
-                self.complete = rospy.get_param("complete")
 
-
-    def ROS_multiAxis_AbsMoveSpeed(self,oper,value):
+    def ROS_multiAxis_AbsoluteMove(self, oper, value):
         for i in range(self.Axis_num):
-            address, num_registers, values = self.spcom._is_X(i,oper,value)
-
-            rospy.set_param('complete',0)
-            self.complete = rospy.get_param("complete")
-
-            while self.complete == 0:
-                self.client.multiAxis_AbsMoveSpeed(address,values,i)
-                self.complete = rospy.get_param("complete")
+            self._perform_operation(i, oper, value, self.client.multiAxis_AbsoluteMove)
 
 
-    def ROS_multiAxis_AdvanceOrigin(self,oper,value):
+    def ROS_multiAxis_AbsMoveSpeed(self, oper, value):
         for i in range(self.Axis_num):
-            address, num_registers, values = self.spcom._is_X(i,oper,value)
-
-            rospy.set_param('complete',0)
-            self.complete = rospy.get_param("complete")
-
-            while self.complete == 0:
-                print(f"ROS_multiAxis_AdvanceOrigin:  address={address}, values={values}")
-                self.client.multiAxis_Origin(address, values,i)
-                self.complete = rospy.get_param("complete")
+            self._perform_operation(i, oper, value, self.client.multiAxis_AbsMoveSpeed)
 
 
-
-# class OperCommand():
-#     def __init__(self, client):
-#         self.spcom = Split_command()
-#         self.client = client
-#         self.Axis_num = 3
-
-#     def _perform_operation(self, i, oper, value, operation_func):
-#         address, num_registers, values = self.spcom._is_X(i, oper, value)
-
-#         rospy.set_param('complete', 0)
-#         self.complete = rospy.get_param("complete")
-
-#         while self.complete == 0:
-#             operation_func(address, values, i)
-#             self.complete = rospy.get_param("complete")
-
-
-#     def ROS_multiAxis_AbsoluteMove(self, oper, value):
-#         for i in range(self.Axis_num):
-#             self._perform_operation(i, oper, value, self.client.multiAxis_AbsoluteMove)
-
-#     def ROS_multiAxis_AbsMoveSpeed(self, oper, value):
-#         for i in range(self.Axis_num):
-#             self._perform_operation(i, oper, value, self.client.multiAxis_AbsMoveSpeed)
-
-#     def ROS_multiAxis_AdvanceOrigin(self, oper, value):
-#         for i in range(self.Axis_num):
-#             self._perform_operation(i, oper, value, self.client.multiAxis_Origin)
+    def ROS_multiAxis_AdvanceOrigin(self, oper, value):
+        for i in range(self.Axis_num):
+            self._perform_operation(i, oper, value, self.client.multiAxis_Origin)

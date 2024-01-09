@@ -1,6 +1,5 @@
 import rospy
 from ros_modbus_msg.msg import operation
-import sys
 from wrapper_modbus.d12_modbus_client import D12ModbusClient
 from wrapper_modbus.d12_controller_mapping import *
 from wrapper_modbus.ROS_Modbus import *
@@ -63,11 +62,11 @@ def callback_sub_param(msg):
 if __name__ == '__main__':
     rospy.init_node('modbus_subscriber_client')
 
-    host                         = '192.168.1.222'
-    ch0                          = ['x_1',10120,2,10150]
-    ch1                          = ['x_2',10220,2,10250]
-    multiAxis_EMERGENCYSTOP_data = [12999,255]
-    multiAxis_OriginAll_data     = [12997,255]
+    # host                         = '192.168.1.222'
+    # ch0                          = ['x_1',10120,2,10150]
+    # ch1                          = ['x_2',10220,2,10250]
+    # multiAxis_EMERGENCYSTOP_data = [12999,255]
+    # multiAxis_OriginAll_data     = [12997,255]
 
     client = D12ModbusClient(host)
     rospy.loginfo("启动 ModBus 客户端")
