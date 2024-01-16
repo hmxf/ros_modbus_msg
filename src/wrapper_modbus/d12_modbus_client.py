@@ -69,9 +69,9 @@ class D12ModbusClient(BaseModbusClient):
         self._writeRegisters(address_write_start,values)
 """
     
-    def check_complete(self,i,value):
-        result = self.readRegisters(check_complete_map[i][0], check_complete_map[i][1])
-        value = value[-2:]
+    def check_complete(self,i,value,tmp):
+        result = self._readRegisters(check_complete_map[i][0], check_complete_map[i][1])
+        value = value[-2:] + tmp
 
         while result != value:
             if self._STOP == 1:
@@ -81,7 +81,7 @@ class D12ModbusClient(BaseModbusClient):
         rospy.set_param('complete',1) 
 
 
-    def multiAxis_AbsoluteMove(self,address,value,i):
+    def multiAxis_AbsoluteMove(self,address,value,i,tmp):
         rospy.loginfo("Absolute Move\n")
         if not self._STOP:
             self._writeRegisters(address,value)
@@ -95,14 +95,14 @@ class D12ModbusClient(BaseModbusClient):
         self._writeRegisters(address_write_start,values)'''
     
 
-    def multiAxis_AbsMoveSpeed(self,address,value,i):
+    def multiAxis_AbsMoveSpeed(self,address,value,i,tmp):
         rospy.loginfo("Absolute Move with Specific Running Speed\n")
         if not self._STOP:
             self._writeRegisters(address,value)
         self.check_complete(i,value)
 
     
-    def multiAxis_Origin(self,address,value,i):
+    def multiAxis_Origin(self,address,value,i,tmp):
         """Origin, 
         0 for the current speed returning to the origin
         value for return to the origin at this value speed
