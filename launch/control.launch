@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="ros_modbus_msg" type="listen.py"  name="listen"   output="screen" />
+    <node pkg="ros_modbus_msg" type="node.py"    name="node"     output="screen" />
+    <node pkg="ros_modbus_msg" type="Spindle_motor.py" name="Spindle"  output="screen" />
+</launch>
