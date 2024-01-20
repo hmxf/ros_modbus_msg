@@ -50,6 +50,7 @@ catkin_python_setup()
 add_message_files(
   FILES
   operation.msg
+  spindle_argument.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -162,6 +163,7 @@ catkin_install_python(PROGRAMS
   scripts/node.py
   examples/test.py
   scripts/listen.py
+  scripts/Spindle_motor.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
