@@ -39,7 +39,7 @@ class BaseModbusClient():
         self.client.close()
 
     
-    def _writeRegisters(self,Address_start,Values):
+    def _writeRegisters(self,Address_start,Values,slave=0):
         """
             写入 Modbus 寄存器  Writes modbus registers
             :param Address_start(int): First address of the values to write
@@ -48,7 +48,7 @@ class BaseModbusClient():
         with self.__mutex:
             try:
                 if not rospy.is_shutdown() :
-                    self.client.write_registers(Address_start, Values)
+                    self.client.write_registers(Address_start, Values,slave=slave)
                     rospy.loginfo(f"BaseModbusClient-_writeRegisters: writing address:{Address_start},values:{Values}")
             except Exception as e:
                 rospy.logwarn("Could not write values %s to address %d.\n ",str(Values),Address_start)

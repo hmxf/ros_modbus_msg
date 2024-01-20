@@ -62,13 +62,15 @@ class OperCommand():
 
         rospy.set_param('complete', 0)
         self.complete = rospy.get_param("complete")
-
-        tmp = 0
-        if oper == 3 or 5:
-            tmp = self.client._readRegisters(check_complete_map[i][0], check_complete_map[i][1])
+        
+        if oper == 3 or oper == 5:
+            print(1)
+            tmpo = self.client._readRegisters(check_complete_map[i][0], check_complete_map[i][1])
+        else:
+            tmpo = [0,0]
 
         while self.complete == 0:
-            operation_func(address, values, i,tmp)
+            operation_func(address, values, i,tmpo)
             self.complete = rospy.get_param("complete")
 
 
@@ -85,3 +87,13 @@ class OperCommand():
     def ROS_multiAxis_Origin(self, oper, value):
         for i in range(self.Axis_num):
             self._perform_operation(i, oper, value, self.client.multiAxis_Origin)
+    
+
+    def ROS_multiAxis_RelativeMove(self,oper,value):
+        for i in range(self.Axis_num):
+            self._perform_operation(i,oper,value,self.client.multiAxis_RelativeMove)
+
+
+    def ROS_multiAxis_RelMoveSpeed(self,oper,value):
+        for i in range(self.Axis_num):
+            self._perform_operation(i,oper,value,self.client.multiAxis_RelMoveSpeed)

@@ -39,19 +39,30 @@ def callback_sub_param(msg):
     elif oper == 2:
         opc.ROS_multiAxis_Stop(oper,values)
 
+    # multiAxis_RelativeMove
+    elif oper == 3:
+        opc.ROS_multiAxis_RelativeMove(oper,values)
+    
+
     # multiAxis_AbsoluteMove  
     elif oper == 4:
         opc.ROS_multiAxis_AbsoluteMove(oper,values)
+
+    # multiAxis_RelRunSpeed
+    elif oper == 5:
+        values = [A_x,x_speed,A_y,y_speed,A_z,z_speed]
+        opc.ROS_multiAxis_RelMoveSpeed(oper,values)
+
 
     # multiAxis_AbsRunSpeed  
     elif oper == 6:
         values = [A_x,x_speed,A_y,y_speed,A_z,z_speed] 
         opc.ROS_multiAxis_AbsMoveSpeed(oper,values)
-
+    
     # multiAxis_Origin  
     elif oper == 7:
         values = [x_speed,y_speed,z_speed] 
-        opc.ROS_multiAxis_AdvanceOrigin(oper,values)
+        opc.ROS_multiAxis_Origin(oper,values)
 
     # multiAxis_Origin_all  
     elif oper == 9:

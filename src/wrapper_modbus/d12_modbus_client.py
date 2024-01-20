@@ -61,17 +61,19 @@ class D12ModbusClient(BaseModbusClient):
         rospy.loginfo("The Specified Axis has been Stopped\n")
 
 
-    """
-    def multiAxis_RelativeMove(self,values):
-        rospy.loginfo("Relative Move\n")
-        values = self._norm_xyz(values)
-        address_write_start = multiAxis_OperationTable.multiAxisRelativeMove.value.ADDRESS_WRITE_START 
-        self._writeRegisters(address_write_start,values)
-"""
     
-    def check_complete(self,i,value,tmp):
+    def multiAxis_RelativeMove(self,address,value,i,tmpo):
+        rospy.loginfo("Relative Move\n")
+        if not self._STOP:
+            self._writeRegisters(address,value)
+        self.check_complete(i,value,tmpo)
+    
+    
+    def check_complete(self,i,value,tmpo):
         result = self._readRegisters(check_complete_map[i][0], check_complete_map[i][1])
-        value = value[-2:] + tmp
+        value = value[-2:]
+        for j in range(len(value)):
+            value[j] = value[j]+tmpo[j]
 
         while result != value:
             if self._STOP == 1:
@@ -81,28 +83,28 @@ class D12ModbusClient(BaseModbusClient):
         rospy.set_param('complete',1) 
 
 
-    def multiAxis_AbsoluteMove(self,address,value,i,tmp):
+    def multiAxis_AbsoluteMove(self,address,value,i,tmpo):
         rospy.loginfo("Absolute Move\n")
         if not self._STOP:
             self._writeRegisters(address,value)
-        self.check_complete(i,value)
+        self.check_complete(i,value,tmpo)
 
-    '''
-    def multiAxis_RelMoveSpeed(self,values):
+    
+    def multiAxis_RelMoveSpeed(self,address,value,i,tmpo):
         rospy.loginfo("Relative Move with Specific Running Speed\n")
-        values = self._norm_runspeed(values)      
-        address_write_start = multiAxis_OperationTable.multiAxisRelativeSpeedMove.value.ADDRESS_WRITE_START 
-        self._writeRegisters(address_write_start,values)'''
+        if not self._STOP:
+            self._writeRegisters(address,value)
+        self.check_complete(i,value,tmpo)
     
 
-    def multiAxis_AbsMoveSpeed(self,address,value,i,tmp):
+    def multiAxis_AbsMoveSpeed(self,address,value,i,tmpo):
         rospy.loginfo("Absolute Move with Specific Running Speed\n")
         if not self._STOP:
             self._writeRegisters(address,value)
-        self.check_complete(i,value)
+        self.check_complete(i,value,tmpo)
 
     
-    def multiAxis_Origin(self,address,value,i,tmp):
+    def multiAxis_Origin(self,address,value,i,tmpo):
         """Origin, 
         0 for the current speed returning to the origin
         value for return to the origin at this value speed
@@ -111,10 +113,9 @@ class D12ModbusClient(BaseModbusClient):
             [0,0,]
         """
         rospy.loginfo("Origin Axis with Specific Speed\n")
-        # print(f"multiAxis_Origin: address={address}")
         if not self._STOP:
             self._writeRegisters(address,value)
-        self.check_complete(i,value)
+        self.check_complete(i,value,tmpo)
 
 
     def multiAxis_OriginAll(self,address,value):
