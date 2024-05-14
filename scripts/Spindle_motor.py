@@ -7,8 +7,8 @@ def callback_spindle_motor(msg):
     oper = msg.oper
     address = msg.address
     values = msg.value
-
     num_registers = msg.num_reg
+
     print(f"接受到的oper是{oper},address是{address},values是{values},num_registers是{num_registers}")
     if oper == 1:
         client._writeRegisters(address,values,16)
