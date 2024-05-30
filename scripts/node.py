@@ -31,11 +31,11 @@ def callback_sub_param(msg):
     if oper == 0:
         client.multiAxis_EMERGENCYSTOP(multiAxis_EMERGENCYSTOP_data[0],multiAxis_EMERGENCYSTOP_data[1])
 
-    # multiAxis_StateRead: eg: [0,1,0] 或 [1,0,1]
+    # multiAxis_StateRead: eg: [0,1,0] 
     elif oper == 1:
         opc.ROS_multiAxis_StateRead(oper,values)
     
-    # multiAxis Stop   
+    # multiAxis Stop  eg: [0,1,0]
     elif oper == 2:
         opc.ROS_multiAxis_Stop(oper,values)
 
@@ -59,7 +59,9 @@ def callback_sub_param(msg):
         values = [A_x,x_speed,A_y,y_speed,A_z,z_speed] 
         opc.ROS_multiAxis_AbsMoveSpeed(oper,values)
     
-    # multiAxis_Origin  
+    # multiAxis_Origin:  
+    # 0 for the current speed returning to the origin   
+    # value for return to the origin at this value speed
     elif oper == 7:
         values = [x_speed,y_speed,z_speed] 
         opc.ROS_multiAxis_Origin(oper,values)
@@ -73,11 +75,6 @@ def callback_sub_param(msg):
 if __name__ == '__main__':
     rospy.init_node('modbus_subscriber_client')
 
-    # host                         = '192.168.1.222'
-    # ch0                          = ['x_1',10120,2,10150]
-    # ch1                          = ['x_2',10220,2,10250]
-    # multiAxis_EMERGENCYSTOP_data = [12999,255]
-    # multiAxis_OriginAll_data     = [12997,255]
 
     client = D12ModbusClient(host)
     rospy.loginfo("启动 ModBus 客户端")
