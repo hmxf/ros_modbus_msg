@@ -7,7 +7,6 @@ def callback_spindle_motor(msg):
     oper = msg.oper
     address = msg.address
     values = msg.value
-    values = msg.value
     num_registers = msg.num_reg
     
 
